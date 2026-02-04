@@ -127,7 +127,19 @@ class TestAccountService(TestCase):
 
     def test_list_accounts(self):
         """It should List all accounts from the service"""
-        pass
+        accounts = self._create_accounts(10)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 10)
+        account_names = [account.name for account in accounts]
+        self.assertIn(data[0]["name"], account_names)
+
+    def test_list_on_empty_db(self):
+        """It should return an error if the database is empty."""
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
 
     def test_read_an_account(self):
         """It should read a certain account from the service"""
