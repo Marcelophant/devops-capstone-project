@@ -1,5 +1,7 @@
 # DevOps Capstone Project
 
+![Build Status](https://github.com/Marcelophant/devops-capstone-project/actions/workflows/ci-build.yaml/badge.svg)
+
 Project name: devops-capstone-project
 
 This project will be comprised of various stages including creating tests, a CI/CD pipeline, deploying, adding security and monitoring/observability to the code of a customer accounts microservice.
