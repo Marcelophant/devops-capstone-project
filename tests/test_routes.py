@@ -170,8 +170,39 @@ class TestAccountService(TestCase):
 
     def test_update_account(self):
         """It should update an account"""
-        pass
+        account = AccountFactory()
+        response = self.client.post(
+            BASE_URL,
+            json=account.serialize(),
+            content_type="application/json"
+        )
+        new_account = response.get_json()
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        new_account["name"] = "Mr Bean"
+        new_account["address"] = "In Berlin"
+        response = self.client.put(
+            f"{BASE_URL}/{new_account['id']}",
+            json=new_account,
+            content_type="application/json"    
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_account = response.get_json()
+        self.assertEqual(updated_account["name"], new_account["name"])
+        self.assertEqual(updated_account["email"], account.email)
+        self.assertEqual(updated_account["address"], new_account["address"])
+        self.assertEqual(updated_account["phone_number"], account.phone_number)
+        self.assertEqual(updated_account["date_joined"], str(account.date_joined))
     
+    def test_update_account_not_found(self):
+        """It should return a 404 error because the id does not exist."""
+        account = AccountFactory()
+        response = self.client.put(
+            f"{BASE_URL}/0",
+            json=account.serialize(), 
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_delete_account(self):
         """It should delete an account"""
         pass
