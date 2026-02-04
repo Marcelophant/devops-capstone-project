@@ -124,3 +124,42 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     # ADD YOUR TEST CASES HERE ...
+
+    def test_list_accounts(self):
+        """It should List all accounts from the service"""
+        pass
+
+    def test_read_an_account(self):
+        """It should read a certain account from the service"""
+        account = AccountFactory()
+        original_json = account.serialize()
+        response = self.client.post(
+            BASE_URL,
+            json=original_json,
+            content_type="application/json"
+        )
+        new_account = response.get_json()
+        new_account_id = new_account["id"]
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response_new = self.client.get(f"{BASE_URL}/{new_account_id}", content_type="application/json")
+        data = response_new.get_json()
+        self.assertEqual(response_new.status_code, status.HTTP_200_OK)
+        self.assertEqual(account.name, data["name"])
+        self.assertEqual(new_account_id, data["id"])
+        self.assertEqual(data["email"], account.email)
+        self.assertEqual(data["address"], account.address)
+        self.assertEqual(data["phone_number"], account.phone_number)
+        self.assertEqual(data["date_joined"], str(account.date_joined))
+
+    def test_account_not_found(self):
+        """It should return a 404 error because the id does not exist."""
+        response = self.client.get(f"{BASE_URL}/0", content_type="application/json")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_account(self):
+        """It should update an account"""
+        pass
+    
+    def test_delete_account(self):
+        """It should delete an account"""
+        pass
