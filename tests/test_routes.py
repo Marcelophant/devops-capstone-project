@@ -144,7 +144,6 @@ class TestAccountService(TestCase):
         response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-
     def test_read_an_account(self):
         """It should read a certain account from the service"""
         account = AccountFactory()
@@ -187,7 +186,7 @@ class TestAccountService(TestCase):
         response = self.client.put(
             f"{BASE_URL}/{new_account['id']}",
             json=new_account,
-            content_type="application/json"    
+            content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_account = response.get_json()
@@ -196,13 +195,13 @@ class TestAccountService(TestCase):
         self.assertEqual(updated_account["address"], new_account["address"])
         self.assertEqual(updated_account["phone_number"], account.phone_number)
         self.assertEqual(updated_account["date_joined"], str(account.date_joined))
-    
+
     def test_update_account_not_found(self):
         """It should return a 404 error because the id does not exist."""
         account = AccountFactory()
         response = self.client.put(
             f"{BASE_URL}/0",
-            json=account.serialize(), 
+            json=account.serialize(),
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
